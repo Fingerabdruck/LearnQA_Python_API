@@ -94,5 +94,3 @@ class TestUserRegister(BaseCase):
         }
         response = requests.post('https://playground.learnqa.ru/api/user/', data=data)
         Assertions.assert_code_status(response, 400)
-        print(response.content)
-        

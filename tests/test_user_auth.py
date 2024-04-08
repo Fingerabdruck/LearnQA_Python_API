@@ -10,7 +10,7 @@ class TestUserAuth(BaseCase):
     def setup_method(self):
         data = {
             'email': 'vinkotov@example.com',
-            'password': '1234'
+            'password': '123'
         }
         response1 = requests.post("https://playground.learnqa.ru/api/user/login", data=data)
 
