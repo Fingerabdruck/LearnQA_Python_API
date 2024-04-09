@@ -1,4 +1,4 @@
-import requests
+from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
@@ -7,7 +7,7 @@ class TestUserEditNegative(BaseCase):
     def test_user_edit_negative(self):
         # REGISTER - - Попытаемся изменить данные пользователя, будучи неавторизованными
         register_data = self.prepare_registration_data()
-        response1 = requests.post("https://playground.learnqa.ru/api/user/", data=register_data)
+        response1 = MyRequests.post("/user/", data=register_data)
 
         Assertions.assert_code_status(response1, 200)
         Assertions.assert_json_has_key(response1, "id")
@@ -23,14 +23,14 @@ class TestUserEditNegative(BaseCase):
             'password': password
         }
 
-        response2 = requests.post("https://playground.learnqa.ru/api/user/login", data=login_data)
+        response2 = MyRequests.post("/user/login", data=login_data)
 
         auth_sid = self.get_cookie(response2, "auth_sid")
         token = self.get_header(response2, "x-csrf-token")
 
         # EDIT - - Попытаемся изменить данные пользователя, будучи неавторизованными
         new_name = "Change Name"
-        response3 = requests.put(f"https://playground.learnqa.ru/api/user/{user_id}",
+        response3 = MyRequests.put(f"/user/{user_id}",
                                  data={"firstName": new_name})
         Assertions.assert_code_status(response3, 400)
 
@@ -40,14 +40,14 @@ class TestUserEditNegative(BaseCase):
             'password': '1234'
         }
 
-        response4 = requests.post("https://playground.learnqa.ru/api/user/login", data=login_data2)
+        response4 = MyRequests.post("/user/login", data=login_data2)
 
         auth_sid2 = self.get_cookie(response4, "auth_sid")
         token2 = self.get_header(response4, "x-csrf-token")
 
         # EDIT2 - - Попытаемся изменить данные пользователя, будучи авторизованными другим пользователем
         new_name = "Change Name"
-        response5 = requests.put(f"https://playground.learnqa.ru/api/user/{user_id}",
+        response5 = MyRequests.put(f"/user/{user_id}",
                                  headers={"x-csrf-token": token2},
                                  cookies={"auth_sid": auth_sid2},
                                  data={"firstName": new_name}
@@ -63,7 +63,7 @@ class TestUserEditNegative(BaseCase):
         domain = "example.com"
         random_part = datetime.now().strftime("%m%d%Y%H%M%S")
         email_error = f"{base_part}{random_part}{domain}"
-        response6 = requests.put(f"https://playground.learnqa.ru/api/user/{user_id}",
+        response6 = MyRequests.put(f"/user/{user_id}",
                                  headers={"x-csrf-token": token},
                                  cookies={"auth_sid": auth_sid},
                                  data={"email": email_error}
@@ -75,7 +75,7 @@ class TestUserEditNegative(BaseCase):
         # будучи авторизованными тем же пользователем, на очень короткое значение в один символ
 
         new_name3 = "C"
-        response7 = requests.put(f"https://playground.learnqa.ru/api/user/{user_id}",
+        response7 = MyRequests.put(f"/user/{user_id}",
                                  headers={"x-csrf-token": token},
                                  cookies={"auth_sid": auth_sid},
                                  data={"firstName": new_name3}
