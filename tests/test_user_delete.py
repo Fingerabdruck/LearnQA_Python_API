@@ -1,8 +1,13 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
-
+import allure
+@allure.epic("Delete user cases")
 class TestUserDelete(BaseCase):
+    @allure.description("Create user, authorization and delete, check")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.tag("New", "Essentials", "Authentication")
+    @allure.testcase("TMS-456")
     def test_user_delete(self):
     # REGISTER NEW - Создать пользователя, авторизоваться из-под него, удалить,
     # затем попробовать получить его данные по ID и убедиться, что пользователь действительно удален.
@@ -51,6 +56,7 @@ class TestUserDelete(BaseCase):
         assert response4.content.decode("utf-8") == f"User not found"
 
     #LOGIN ID 2 -  на попытку удалить пользователя по ID 2.
+    @allure.description("Delete user id 2")
     def test_delete_user_2(self):
         data = {
             'email': 'vinkotov@example.com',

@@ -2,8 +2,10 @@ from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
-
+import allure
+@allure.epic("negative cases editing users")
 class TestUserEditNegative(BaseCase):
+    @allure.description("editing user no auth ")
     def test_user_edit_negative(self):
         # REGISTER - - Попытаемся изменить данные пользователя, будучи неавторизованными
         register_data = self.prepare_registration_data()

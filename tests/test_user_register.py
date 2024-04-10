@@ -4,7 +4,8 @@ from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
 import json
-
+import allure
+@allure.epic("User registration")
 class TestUserRegister(BaseCase):
     def setup_method(self):
         base_part = "learnqa"
@@ -25,6 +26,7 @@ class TestUserRegister(BaseCase):
              'email': ''}
         ]
 
+    @allure.description("Create successfuly user")
     def test_create_user_successfully(self):
         data = {
             'password': '123',
@@ -38,6 +40,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_has_key(response, "id")
 
+    @allure.description("Create successfuly user with existing email")
     def test_create_user_with_existing_email(self):
         existing_email = 'vinkotov@example.com'
         user_data = {
@@ -53,6 +56,7 @@ class TestUserRegister(BaseCase):
         print(response.content)
         assert response.content.decode("utf-8") == f"Users with email '{existing_email}' already exists", f"Unexpected response content {response.content.decode('utf-8')}"
 
+    @allure.description("Create user with invalid email")
     def test_create_user_without_dog(self):
         data = {
             'password': '123',
@@ -66,12 +70,14 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"Invalid email format"
 
+    @allure.description("Create user with empty field")
 #ПРОСЬБА ТЕСТЫ НИЖЕ ПРОВЕРИТЬ, У МЕНЯ ПОСТОЯННО ВЫДАЕТ ОШИБКУ, КОД РЕВЬЮ ЧЕРЕЗ ЧАТ ЖПТ НЕ ПОКАЗЫВАЕТ НИЧЕГО
     @pytest.mark.parametrize("test_data", self.empty_field)
     def test_create_user_empty_field(self, test_data):
         response = requests.post('https://playground.learnqa.ru/api/user/', data=test_data)
         print(response.content)
 
+    @allure.description("Create user with small name")
     def test_create_user_name_is_small(self):
         data = {
             'password': '123',
@@ -84,6 +90,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
         print(response.content)
 
+    @allure.description("Create user with long name")
     def test_create_user_name_is_long(self):
         data = {
             'password': '123',
